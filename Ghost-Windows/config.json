@@ -1,0 +1,32 @@
+{
+    "pcs": [
+        {
+            "name": "Gaming PC",
+            "mac": "00:11:22:33:44:55"
+        },
+        {
+            "name": "Office PC",
+            "mac": "AA:BB:CC:DD:EE:FF"
+        },
+        {
+            "name": "Kids PC",
+            "mac": "11:22:33:44:55:66"
+        }
+    ],
+    "users": [
+        {
+            "username": "admin",
+            "password": "adminpassword",
+            "role": "admin",
+            "allowed_macs": []
+        },
+        {
+            "username": "user1",
+            "password": "user1password",
+            "role": "user",
+            "allowed_macs": [
+                "00:11:22:33:44:55"
+            ]
+        }
+    ]
+}

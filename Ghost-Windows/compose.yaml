@@ -1,0 +1,20 @@
+services:
+  ghost:
+    build: .
+    container_name: ghost-app-windows
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./config.json:/app/config.json
+
+  # Optional: Keep cloudflared if you want tunneling, otherwise you can remove it.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: ghost-tunnel-windows
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=PASTE_YOUR_CLOUDFLARE_TUNNEL_TOKEN_HERE
