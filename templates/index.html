@@ -10,33 +10,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-purple: #8b5cf6;
-            --primary-purple-hover: #7c3aed;
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --bg: #050505;
+            --surface: rgba(255, 255, 255, 0.03);
+            --surface-hover: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.08);
             --text-main: #ffffff;
             --text-muted: #94a3b8;
-            --success-color: #10b981;
-            --error-color: #ef4444;
+            --danger: #ef4444;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #050505;
-            background-image:
-                radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.25) 0%, rgba(5, 5, 5, 0) 60%);
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.15) 0%, rgba(5, 5, 5, 0) 50%);
             color: var(--text-main);
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
         }
 
         .container {
-            width: 100%;
-            max-width: 800px;
+            max-width: 1000px;
+            margin: 0 auto;
             padding: 2rem;
             animation: fadeIn 0.5s ease-out;
         }
@@ -57,314 +54,577 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2.5rem;
-            padding: 0 0.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
         }
 
         h1 {
-            font-size: 1.75rem;
-            font-weight: 600;
+            font-size: 1.5rem;
             margin: 0;
-            letter-spacing: -0.5px;
             background: linear-gradient(to right, #fff, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .user-info {
-            font-size: 0.9rem;
+        .user-nav {
             display: flex;
+            gap: 1rem;
             align-items: center;
-            gap: 1.5rem;
-            color: var(--text-muted);
         }
 
-        .user-pill {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 0.4rem 1rem;
-            border-radius: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.85rem;
+        .badge {
+            background: rgba(139, 92, 246, 0.1);
+            color: #c4b5fd;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        strong {
-            color: white;
-        }
-
-        .logout-btn {
+        .nav-btn {
             background: none;
             border: none;
             color: var(--text-muted);
             cursor: pointer;
             font-size: 0.9rem;
+            padding: 0.5rem;
             transition: color 0.2s;
-            font-family: inherit;
-            padding: 0;
         }
 
-        .logout-btn:hover {
+        .nav-btn:hover,
+        .nav-btn.active {
             color: white;
-            text-decoration: underline;
         }
 
-        .pc-list {
+        /* Tabs */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Grid */
+        .grid {
             display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1rem;
         }
 
-        .pc-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 1rem;
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
             padding: 1.5rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
             transition: all 0.2s;
         }
 
-        .pc-card:hover {
-            background: rgba(255, 255, 255, 0.05);
+        .card:hover {
             border-color: rgba(139, 92, 246, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
 
-        .pc-info h2 {
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-title {
             margin: 0;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 500;
-            color: white;
-            margin-bottom: 0.25rem;
         }
 
-        .pc-info p {
+        .card-subtitle {
             margin: 0;
-            color: var(--text-muted);
-            font-family: 'Inter', monospace;
-            /* Keep numbers clean */
             font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: monospace;
             opacity: 0.7;
         }
 
-        /* Status dot imitation */
-        .pc-icon {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background-color: var(--text-muted);
-            border-radius: 50%;
-            margin-right: 0.75rem;
-            opacity: 0.5;
-        }
-
-        .pc-card:hover .pc-icon {
-            background-color: var(--primary-purple);
-            opacity: 1;
-            box-shadow: 0 0 10px var(--primary-purple);
-        }
-
-        .wake-btn {
-            background: rgba(139, 92, 246, 0.1);
-            color: #c4b5fd;
-            border: 1px solid rgba(139, 92, 246, 0.3);
+        /* Buttons */
+        .btn {
+            border: none;
             border-radius: 0.5rem;
-            padding: 0.6rem 1.25rem;
+            padding: 0.6rem 1rem;
             font-size: 0.9rem;
-            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
+            font-weight: 500;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
         }
 
-        .wake-btn:hover {
-            background: var(--primary-purple);
+        .btn-primary {
+            background: rgba(139, 92, 246, 0.1);
+            color: #c4b5fd;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary);
             color: white;
-            border-color: var(--primary-purple);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
         }
 
-        .wake-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background: transparent;
-            border-color: #333;
-            color: #666;
-            box-shadow: none;
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
+            padding: 0.4rem;
         }
 
-        /* Toast notification */
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Admin UI */
+        .admin-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            color: white;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .permissions-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+
+        /* Toast */
         .toast {
             position: fixed;
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background-color: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(10px);
-            color: #fff;
+            background: #111;
+            color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 2rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            border: 1px solid var(--border);
             opacity: 0;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 100;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
-            white-space: nowrap;
+            transition: all 0.3s;
+            z-index: 200;
         }
 
         .toast.show {
-            transform: translateX(-50%) translateY(0);
             opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
-        .toast-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
+        .toast.error {
+            border-color: var(--danger);
         }
 
-        .toast.success .toast-icon {
-            color: var(--success-color);
-        }
-
-        .toast.error .toast-icon {
-            color: var(--error-color);
-        }
-
-        .empty-state {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 4rem 2rem;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 1rem;
-            border: 1px dashed rgba(255, 255, 255, 0.1);
+        .toast.success {
+            border-color: var(--primary);
         }
     </style>
 </head>
 
 <body>
-
     <div class="container">
         <header>
-            <h1>Ghost</h1>
-            <div class="user-info">
-                <span class="user-pill">
-                    {{ user.username }} <strong>{{ user.role }}</strong>
-                </span>
-                <a href="/logout" class="logout-btn">Log out</a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <h1>Ghost</h1>
+                <span class="badge">{{ user.role }}</span>
             </div>
+
+            <nav class="user-nav">
+                <button class="nav-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+                {% if is_admin %}
+                <button class="nav-btn" onclick="switchTab('admin')">Admin Panel</button>
+                {% endif %}
+                <span style="color: var(--border)">|</span>
+                <span style="font-size: 0.9rem; color: var(--text-muted)">{{ user.username }}</span>
+                <a href="/logout" class="nav-btn">Log out</a>
+            </nav>
         </header>
 
-        <div class="pc-list">
-            {% if pcs %}
-            {% for pc in pcs %}
-            <div class="pc-card">
-                <div class="pc-info">
-                    <h2><span class="pc-icon"></span>{{ pc.name }}</h2>
-                    <p>{{ pc.mac }}</p>
+        <!-- DASHBOARD TAB -->
+        <div id="dashboard" class="tab-content active">
+            <div class="grid">
+                {% if pcs %}
+                {% for pc in pcs %}
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">{{ pc.name }}</h2>
+                            <p class="card-subtitle">{{ pc.mac }}</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="wakePC('{{ pc.name }}', '{{ pc.mac }}', this)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                            <line x1="12" y1="2" x2="12" y2="12"></line>
+                        </svg>
+                        Power On
+                    </button>
                 </div>
-                <!-- We need to read the token from cookies to send with the request -->
-                <button class="wake-btn" onclick="wakePC('{{ pc.name }}', '{{ pc.mac }}')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
-                        <line x1="12" y1="2" x2="12" y2="12"></line>
-                    </svg>
-                    Power On
-                </button>
+                {% endfor %}
+                {% else %}
+                <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 3rem;">
+                    No PCs assigned to you.
+                </div>
+                {% endif %}
             </div>
-            {% endfor %}
-            {% else %}
-            <div class="empty-state">
-                No PCs assigned to this account.
+        </div>
+
+        {% if is_admin %}
+        <!-- ADMIN TAB -->
+        <div id="admin" class="tab-content">
+
+            <!-- PCs Section -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title">Computers</h2>
+                    <button class="btn btn-secondary" onclick="openAddPCModal()">+ Add PC</button>
+                </div>
+                <div class="grid">
+                    {% for pc in all_pcs %}
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h2 class="card-title">{{ pc.name }}</h2>
+                                <p class="card-subtitle">{{ pc.mac }}</p>
+                            </div>
+                            <button class="btn btn-danger" onclick="deletePC('{{ pc.mac }}')">🗑️</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-            {% endif %}
+
+            <!-- Users Section -->
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title">Users</h2>
+                    <button class="btn btn-secondary" onclick="openAddUserModal()">+ Add User</button>
+                </div>
+                <div class="grid">
+                    {% for u in users %}
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h2 class="card-title">{{ u.username }}</h2>
+                                <p class="card-subtitle">{{ u.role }}</p>
+                            </div>
+                            {% if u.username != user.username %}
+                            <button class="btn btn-danger" onclick="deleteUser('{{ u.username }}')">🗑️</button>
+                            {% endif %}
+                        </div>
+                        <button class="btn btn-secondary" style="margin-top: auto;"
+                            onclick='openPermissionsModal({{ u | tojson }})'>
+                            Manage Access
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ADD PC MODAL -->
+    <div id="modal-add-pc" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0">Add New PC</h3>
+            <div class="form-group">
+                <label class="form-label">PC Name</label>
+                <input type="text" id="new-pc-name" class="form-input" placeholder="e.g. Living Room">
+            </div>
+            <div class="form-group">
+                <label class="form-label">MAC Address</label>
+                <input type="text" id="new-pc-mac" class="form-input" placeholder="AA:BB:CC:DD:EE:FF">
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
+                <button class="btn btn-secondary" onclick="closeModal('modal-add-pc')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitAddPC()">Save</button>
+            </div>
         </div>
     </div>
 
-    <div id="toast" class="toast">
-        <div class="toast-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
+    <!-- ADD USER MODAL -->
+    <div id="modal-add-user" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0">Add New User</h3>
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" id="new-user-name" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" id="new-user-pass" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Role</label>
+                <select id="new-user-role" class="form-input" style="background: #111;">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
+                <button class="btn btn-secondary" onclick="closeModal('modal-add-user')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitAddUser()">Save</button>
+            </div>
         </div>
-        <span id="toast-message">Notification</span>
     </div>
+
+    <!-- MANAGE PERMISSIONS MODAL -->
+    <div id="modal-perms" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0">Manage Access</h3>
+            <p class="form-label" id="perm-user-title">Select PCs for this user:</p>
+
+            <div class="permissions-grid" id="perm-list">
+                <!-- Populated by JS -->
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
+                <button class="btn btn-secondary" onclick="closeModal('modal-perms')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitPermissions()">Save Access</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Notification</div>
 
     <script>
+        const API_BASE = '/api/admin';
+        const ALL_PCS = {{ all_pcs | tojson if is_admin else '[]' }};
+        let CURRENT_EDIT_USER = null;
+
+        // --- Tabs ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
         function getCookie(name) {
             const value = `; ${document.cookie}`;
             const parts = value.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(';').shift();
         }
 
-        async function wakePC(name, mac) {
-            const btn = event.currentTarget;
-            const originalContent = btn.innerHTML;
+        const TOKEN = getCookie('access_token');
+        const HEADERS = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${TOKEN}`
+        };
 
-            btn.disabled = true;
-            btn.innerHTML = 'Sending...';
-            btn.style.cursor = 'wait';
-
-            const token = getCookie('access_token');
-
+        async function apiCall(url, method, body = null) {
             try {
-                const response = await fetch('/api/wake', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ name: name, mac: mac }),
-                });
+                const opts = { method, headers: HEADERS };
+                if (body) opts.body = JSON.stringify(body);
 
-                const result = await response.json();
+                const res = await fetch(url, opts);
+                const data = await res.json();
 
-                if (response.ok) {
-                    showToast(`Magic packet sent to ${name}`, 'success');
+                if (res.ok) {
+                    showToast(data.message || 'Success', 'success');
+                    setTimeout(() => location.reload(), 1000); // Simple reload to refresh UI
                 } else {
-                    showToast(result.detail || 'Failed', 'error');
+                    showToast(data.detail || 'Error', 'error');
                 }
-            } catch (error) {
-                showToast(`Error: ${error.message}`, 'error');
-            } finally {
-                setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = originalContent;
-                    btn.style.cursor = 'pointer';
-                }, 1000);
+            } catch (e) {
+                showToast(e.message, 'error');
             }
         }
 
-        function showToast(message, type) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const icon = toast.querySelector('.toast-icon');
+        // --- Wake (User Action) ---
+        async function wakePC(name, mac, btn) {
+            const original = btn.innerHTML;
+            btn.disabled = true; btn.innerHTML = 'Sending...';
 
-            toastMsg.textContent = message;
-            toast.className = `toast ${type} show`;
+            try {
+                const res = await fetch('/api/wake', {
+                    method: 'POST', headers: HEADERS,
+                    body: JSON.stringify({ name, mac })
+                });
+                const data = await res.json();
+                if (res.ok) showToast(`Signal sent to ${name}`, 'success');
+                else showToast(data.detail, 'error');
+            } catch (e) { showToast('Network error', 'error'); }
 
-            if (type === 'error') {
-                icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
-            } else {
-                icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-            }
+            setTimeout(() => { btn.disabled = false; btn.innerHTML = original; }, 1000);
+        }
 
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+        // --- Admin: PCs ---
+        function openAddPCModal() { document.getElementById('modal-add-pc').classList.add('open'); }
+
+        async function submitAddPC() {
+            const name = document.getElementById('new-pc-name').value;
+            const mac = document.getElementById('new-pc-mac').value;
+            if (!name || !mac) return showToast('Fill all fields', 'error');
+
+            await apiCall(`${API_BASE}/pcs`, 'POST', { name, mac });
+        }
+
+        async function deletePC(mac) {
+            if (!confirm('Delete this PC?')) return;
+            await apiCall(`${API_BASE}/pcs/${mac}`, 'DELETE');
+        }
+
+        // --- Admin: Users ---
+        function openAddUserModal() { document.getElementById('modal-add-user').classList.add('open'); }
+
+        async function submitAddUser() {
+            const username = document.getElementById('new-user-name').value;
+            const password = document.getElementById('new-user-pass').value;
+            const role = document.getElementById('new-user-role').value;
+
+            if (!username || !password) return showToast('Fill all fields', 'error');
+            await apiCall(`${API_BASE}/users`, 'POST', { username, password, role });
+        }
+
+        async function deleteUser(username) {
+            if (!confirm(`Delete user ${username}?`)) return;
+            await apiCall(`${API_BASE}/users/${username}`, 'DELETE');
+        }
+
+        // --- Admin: Permissions ---
+        function openPermissionsModal(user) {
+            CURRENT_EDIT_USER = user;
+            document.getElementById('perm-user-title').innerText = `Select PCs for ${user.username}:`;
+            const container = document.getElementById('perm-list');
+            container.innerHTML = '';
+
+            ALL_PCS.forEach(pc => {
+                const formCheck = document.createElement('div');
+                formCheck.className = 'checkbox-item';
+
+                const isChecked = user.allowed_macs.includes(pc.mac);
+
+                formCheck.innerHTML = `
+                    <input type="checkbox" value="${pc.mac}" id="chk_${pc.mac}" ${isChecked ? 'checked' : ''}>
+                    <label for="chk_${pc.mac}" style="cursor:pointer; flex-grow:1; color:#ddd; font-size:0.9rem;">
+                        ${pc.name} <span style="opacity:0.5; font-size:0.8em; margin-left:0.5rem">${pc.mac}</span>
+                    </label>
+                `;
+                container.appendChild(formCheck);
+            });
+
+            document.getElementById('modal-perms').classList.add('open');
+        }
+
+        async function submitPermissions() {
+            const checkboxes = document.getElementById('perm-list').querySelectorAll('input[type="checkbox"]');
+            const allowed = Array.from(checkboxes).filter(c => c.checked).map(c => c.value);
+
+            await apiCall(`${API_BASE}/users/${CURRENT_EDIT_USER.username}/permissions`, 'PUT', { allowed_macs: allowed });
+        }
+
+        // --- UI ---
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = `toast show ${type}`;
+            setTimeout(() => t.classList.remove('show'), 3000);
         }
     </script>
 </body>
