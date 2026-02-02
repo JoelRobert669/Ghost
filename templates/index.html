@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #8b5cf6;
+            --primary-purple-hover: #7c3aed;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            background-image:
+                radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.25) 0%, rgba(5, 5, 5, 0) 60%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding: 0 0.5rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .user-pill {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+        }
+
+        strong {
+            color: white;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        .logout-btn:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .pc-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .pc-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .pc-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .pc-info h2 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+
+        .pc-info p {
+            margin: 0;
+            color: var(--text-muted);
+            font-family: 'Inter', monospace;
+            /* Keep numbers clean */
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        /* Status dot imitation */
+        .pc-icon {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-muted);
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            opacity: 0.5;
+        }
+
+        .pc-card:hover .pc-icon {
+            background-color: var(--primary-purple);
+            opacity: 1;
+            box-shadow: 0 0 10px var(--primary-purple);
+        }
+
+        .wake-btn {
+            background: rgba(139, 92, 246, 0.1);
+            color: #c4b5fd;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .wake-btn:hover {
+            background: var(--primary-purple);
+            color: white;
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .wake-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: transparent;
+            border-color: #333;
+            color: #666;
+            box-shadow: none;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success-color);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--error-color);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 1rem;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Ghost</h1>
+            <div class="user-info">
+                <span class="user-pill">
+                    {{ user.username }} <strong>{{ user.role }}</strong>
+                </span>
+                <a href="/logout" class="logout-btn">Log out</a>
+            </div>
+        </header>
+
+        <div class="pc-list">
+            {% if pcs %}
+            {% for pc in pcs %}
+            <div class="pc-card">
+                <div class="pc-info">
+                    <h2><span class="pc-icon"></span>{{ pc.name }}</h2>
+                    <p>{{ pc.mac }}</p>
+                </div>
+                <!-- We need to read the token from cookies to send with the request -->
+                <button class="wake-btn" onclick="wakePC('{{ pc.name }}', '{{ pc.mac }}')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                        <line x1="12" y1="2" x2="12" y2="12"></line>
+                    </svg>
+                    Power On
+                </button>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                No PCs assigned to this account.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <div class="toast-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        <span id="toast-message">Notification</span>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        async function wakePC(name, mac) {
+            const btn = event.currentTarget;
+            const originalContent = btn.innerHTML;
+
+            btn.disabled = true;
+            btn.innerHTML = 'Sending...';
+            btn.style.cursor = 'wait';
+
+            const token = getCookie('access_token');
+
+            try {
+                const response = await fetch('/api/wake', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ name: name, mac: mac }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showToast(`Magic packet sent to ${name}`, 'success');
+                } else {
+                    showToast(result.detail || 'Failed', 'error');
+                }
+            } catch (error) {
+                showToast(`Error: ${error.message}`, 'error');
+            } finally {
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                    btn.style.cursor = 'pointer';
+                }, 1000);
+            }
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const icon = toast.querySelector('.toast-icon');
+
+            toastMsg.textContent = message;
+            toast.className = `toast ${type} show`;
+
+            if (type === 'error') {
+                icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+            } else {
+                icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+            }
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>

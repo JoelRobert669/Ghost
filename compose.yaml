@@ -1,0 +1,19 @@
+services:
+  ghost:
+    build: .
+    container_name: ghost-app
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./config.json:/app/config.json
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: ghost-tunnel
+    restart: unless-stopped
+    command: tunnel run
+    network_mode: host
+    environment:
+      - TUNNEL_TOKEN=PASTE_YOUR_CLOUDFLARE_TUNNEL_TOKEN_HERE
